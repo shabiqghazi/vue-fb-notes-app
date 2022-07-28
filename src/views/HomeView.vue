@@ -1,9 +1,66 @@
-<script setup>
-import TheWelcome from "@/components/TheWelcome.vue";
+<template>
+  <h1 class="h2 mb-4">All Notes</h1>
+  <router-link class="btn btn-secondary mb-3" to="/addnote">
+    Add Note
+  </router-link>
+  <!-- <button class="btn btn-secondary mb-3">Add Note</button> -->
+  <div class="row">
+    <note-component
+      v-for="note in notes"
+      :key="note.id"
+      :title="note.title"
+      :text="note.text"
+      :noteid="note.id"
+      :timestamp="note.timestamp"
+      @notedelete="onNoteDeleted"
+    />
+  </div>
+</template>
+
+<script>
+import { onMounted, ref } from "vue";
+import NoteComponent from "../components/NoteComponent.vue";
+import useDatabase from "../composable/useDatabase.js";
+import useTimeFormat from "../composable/useTimeFormat.js";
+export default {
+  name: "HomeView",
+  setup() {
+    const { getNotes } = useDatabase();
+    const { getTimeString } = useTimeFormat();
+    const notes = ref([]);
+
+    const getAllNotes = async () => {
+      try {
+        const list = await getNotes();
+        notes.value = list.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+          timestamp: getTimeString(doc.data().timestamp.seconds),
+        }));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    const onNoteDeleted = () => {
+      alert("Delete success");
+      getAllNotes();
+    };
+
+    onMounted(() => {
+      getAllNotes();
+    });
+
+    return {
+      notes,
+      onNoteDeleted,
+    };
+  },
+  components: {
+    NoteComponent,
+  },
+};
 </script>
 
-<template>
-  <main>
-    <TheWelcome />
-  </main>
-</template>
+<style scoped>
+</style>
