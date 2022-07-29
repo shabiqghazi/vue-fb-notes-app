@@ -10,8 +10,14 @@
           <!-- {{ text.substring(0, 50) }}<span v-if="text.length > 50">...</span> -->
           {{ text }}
         </p>
+        <router-link
+          class="btn btn-sm btn-outline-success"
+          :to="`/updatenote/${noteid}`"
+        >
+          Edit
+        </router-link>
         <button
-          class="btn btn-sm btn-outline-danger"
+          class="btn btn-sm btn-outline-danger ms-1"
           @click="handleDelete(noteid)"
         >
           Delete

@@ -29,6 +29,10 @@ export default {
     const { getTimeString } = useTimeFormat();
     const notes = ref([]);
 
+    onMounted(() => {
+      getAllNotes();
+    });
+
     const getAllNotes = async () => {
       try {
         const list = await getNotes();
@@ -46,10 +50,6 @@ export default {
       alert("Delete success");
       getAllNotes();
     };
-
-    onMounted(() => {
-      getAllNotes();
-    });
 
     return {
       notes,
