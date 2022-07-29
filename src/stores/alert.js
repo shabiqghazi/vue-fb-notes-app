@@ -11,16 +11,13 @@ export const useAlertStore = defineStore({
     getAlertData: (state) => state,
   },
   actions: {
-    setAlert(isOpen = false, type = "error", message = "") {
-      this.isOpen = isOpen;
-      console.log("alert setted");
-      if (isOpen === true) {
-        this.type = type;
-        this.message = message;
-        setTimeout(() => {
-          this.setAlert();
-        }, 2000);
-      }
+    setAlert(type = "secondary", message = "") {
+      this.isOpen = true;
+      this.type = type;
+      this.message = message;
+      setTimeout(() => {
+        this.isOpen = false;
+      }, 6000);
     },
   },
 });

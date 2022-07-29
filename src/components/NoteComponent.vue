@@ -16,6 +16,7 @@
         >
           Edit
         </router-link>
+
         <button
           class="btn btn-sm btn-outline-danger ms-1"
           @click="handleDelete(noteid)"
@@ -31,15 +32,10 @@
 import useDatabase from "../composable/useDatabase.js";
 export default {
   name: "NoteComponent",
+
   setup(props, context) {
-    const { deleteNote } = useDatabase();
-    const handleDelete = async (id) => {
-      try {
-        await deleteNote(id);
-        context.emit("notedelete");
-      } catch (error) {
-        console.log(error);
-      }
+    const handleDelete = (id) => {
+      context.emit("notedelete", id);
     };
     return {
       handleDelete,

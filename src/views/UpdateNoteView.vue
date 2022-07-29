@@ -1,11 +1,18 @@
 <template>
   <h1 class="h2 mb-4">Update Note</h1>
-  <note-form v-if="id" :prnoteid="id" :prtitle="title" :prtext="text" />
+  <note-form
+    v-if="id"
+    :prnoteid="id"
+    :prtitle="title"
+    :prtext="text"
+    @onupdate="handleNoteUpdated"
+  />
 </template>
 
 <script>
 import NoteForm from "../components/NoteForm.vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
+import { useAlertStore } from "../stores/alert.js";
 import useDatabase from "../composable/useDatabase.js";
 import { onMounted, reactive, toRefs } from "vue";
 export default {
@@ -18,6 +25,8 @@ export default {
     });
     const { getNote } = useDatabase();
     const route = useRoute();
+    const router = useRouter();
+    const alert = useAlertStore();
 
     onMounted(() => {
       getData(route.params.id);
@@ -33,8 +42,13 @@ export default {
         console.log(error);
       }
     };
+    const handleNoteUpdated = () => {
+      alert.setAlert("success", "Note has been updated");
+      router.push("/");
+    };
     return {
       ...toRefs(note),
+      handleNoteUpdated,
     };
   },
   components: {

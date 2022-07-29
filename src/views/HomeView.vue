@@ -12,7 +12,7 @@
       :text="note.text"
       :noteid="note.id"
       :timestamp="note.timestamp"
-      @notedelete="onNoteDeleted"
+      @notedelete="onNoteDelete"
     />
   </div>
 </template>
@@ -22,11 +22,13 @@ import { onMounted, ref } from "vue";
 import NoteComponent from "../components/NoteComponent.vue";
 import useDatabase from "../composable/useDatabase.js";
 import useTimeFormat from "../composable/useTimeFormat.js";
+import { useAlertStore } from "../stores/alert.js";
 export default {
   name: "HomeView",
   setup() {
-    const { getNotes } = useDatabase();
+    const { getNotes, deleteNote } = useDatabase();
     const { getTimeString } = useTimeFormat();
+    const alert = useAlertStore();
     const notes = ref([]);
 
     onMounted(() => {
@@ -46,14 +48,19 @@ export default {
       }
     };
 
-    const onNoteDeleted = () => {
-      alert("Delete success");
+    const onNoteDelete = async (id) => {
+      try {
+        await deleteNote(id);
+        alert.setAlert("success", "Note has been deleted");
+      } catch (error) {
+        console.log(error);
+      }
       getAllNotes();
     };
 
     return {
       notes,
-      onNoteDeleted,
+      onNoteDelete,
     };
   },
   components: {

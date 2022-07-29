@@ -34,22 +34,25 @@ import { useRoute } from "vue-router";
 export default {
   name: "NoteForm",
   props: ["prnoteid", "prtitle", "prtext"],
-  setup(props) {
+  setup(props, context) {
     const { addNote, updateNote } = useDatabase();
     const route = useRoute();
+
     const title = ref(props.prtitle);
     const text = ref(props.prtext);
-
     const handleSubmit = async () => {
       const data = {
         title: title.value,
         text: text.value,
       };
       try {
-        console.log(data);
-        route.name === "updatenote"
-          ? await updateNote(props.prnoteid, data)
-          : await addNote(data);
+        if (route.name === "updatenote") {
+          await updateNote(props.prnoteid, data);
+          context.emit("onupdate");
+        } else if (route.name === "addnote") {
+          await addNote(data);
+          context.emit("onadd");
+        }
       } catch (error) {
         console.log(error);
       }
