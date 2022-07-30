@@ -3,7 +3,6 @@
   <router-link class="btn btn-secondary mb-3" to="/addnote">
     Add Note
   </router-link>
-  <!-- <button class="btn btn-secondary mb-3">Add Note</button> -->
   <div class="row">
     <note-component
       v-for="note in notes"

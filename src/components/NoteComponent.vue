@@ -29,13 +29,14 @@
 </template>
 
 <script>
-import useDatabase from "../composable/useDatabase.js";
 export default {
   name: "NoteComponent",
 
   setup(props, context) {
     const handleDelete = (id) => {
-      context.emit("notedelete", id);
+      if (confirm("Are you sure?")) {
+        context.emit("notedelete", id);
+      }
     };
     return {
       handleDelete,
